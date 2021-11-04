@@ -1,2 +1,2 @@
 # rico-lisp
-A simple lisp interpreter in Python
+A simple lisp interpreter in Python.
