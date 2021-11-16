@@ -32,3 +32,6 @@ Expand this so that I can write something like Asteroids.
     * To write a game, I need to create graphics structures such as windows which need to be de-allocated if the game halts unexpectedly.
 * Stack traces
     * We'll need to be able to report what the interpreter was doing when we, for example, reference a variable that doesn't exist.  To do that we'd probably change the parser to attach properties with each token detailing the file, line number, and character position.
+* Macros
+* Plugin/module architecture.
+    * I don't like needing to update `eval()` when we add new structures.  Should be able to load a module that uses either lisp or python functions that hook into `eval()`.
