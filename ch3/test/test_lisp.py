@@ -99,3 +99,19 @@ class TestLisp(unittest.TestCase):
         self._enter('(account2 40)', 140)
         self._enter('(account2 -10)', 130)
         self._verify_console()
+
+
+    def test_variable(self):
+        self._start_console()
+        self._enter('(set! x 5)')
+        self._enter('(* x 2)', 10)
+        self._verify_console()
+
+    def xx_test_fib_recursive(self):
+        self._start_console()
+        self._enter("""
+            (define fib (lambda (x)
+                
+            ))
+        """)
+        self._verify_console()
