@@ -92,7 +92,11 @@ class TestLisp(unittest.TestCase):
         """
         self._start_console()
         self._enter(code)
-        self._enter('(define account1 (make-account 100))', None)
+        self._enter('(define account1 (make-account 100))')
         self._enter('(account1 -20)', 80)
+        self._enter('(account1 -20)', 60)
+        self._enter('(define account2 (make-account 100))')
+        self._enter('(account2 40)', 140)
+        self._enter('(account2 -10)', 130)
         self._verify_console()
 
