@@ -64,12 +64,35 @@ class TestLisp(unittest.TestCase):
         self.assertAlmostEqual(314.15926535, result, places=5)
     
     def test_repl(self):
-        console = TestConsole()
-        lisp = LispInterpreter()
-        console.enter('(+ 5 15)')
-        console.expect(20)
-        console.enter('(+ 1 (* 5 10))')
-        console.expect(51)
-        lisp.repl(console=console)
-        console.verify_expectations(self)
+        self._start_console()
+        self._enter('(+ 5 15)', 20)
+        self._enter('(+ 1 (* 5 10))', 51)
+        self._verify_console()
+
+    def _start_console(self):
+        self.console = TestConsole()
+        self.lisp = LispInterpreter()
+    
+    def _enter(self, code, expected_value = None):
+        """Enter some code into the repl and expect a return value."""
+        self.console.enter(code)
+        self.console.expect(expected_value)
+
+    def _verify_console(self):
+        self.lisp.repl(console=self.console)
+        self.console.verify_expectations(self)
+
+    def test_procedure(self):
+        code = """
+            (define make-account
+                (lambda (balance)
+                    (lambda (amt)
+                        (begin (set! balance (+ balance amt))
+                                balance))))
+        """
+        self._start_console()
+        self._enter(code)
+        self._enter('(define account1 (make-account 100))', None)
+        self._enter('(account1 -20)', 80)
+        self._verify_console()
 

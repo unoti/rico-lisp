@@ -9,7 +9,6 @@ Number = (int, float)     # Number is implemented as either a Python int or floa
 Atom   = (Symbol, Number) # An Atom is a Symbol or Number
 List   = list             # List is implemented as a Python list
 Exp    = (Atom, List)     # An expression is either an Atom or List
-Env    = dict             # An environment is a mapping of {variable: value}. Dict for now; we'll expand later.
 
 def tokenize(chars: str):
     """Convert a string of characters into a list of tokens."""
@@ -50,6 +49,32 @@ def parse(program: str) -> Exp:
     """Read a string and turn it into an Expression."""
     return read_from_tokens(tokenize(program))
 
+
+class Env(dict):
+    """
+    An environment contains variable definitions, and may be linked to a parent environment.
+    You can think of it as a dictionary with an optional parent dictionary.
+    """
+    def __init__(self, parms=(), args=(), outer: 'Env'=None):
+        """
+        @param parms: Variable names to bind arguments to.
+        @param args: Values to bind the variable names to.
+        @param outer: A parent environment (optional).  If specified, then we will search
+        the parent environments recursively if we cannot find a given value in the current environment.
+        """
+        self.update(zip(parms, args))
+        self.outer = outer
+    
+    def find(self, var: str) -> 'Env':
+        """
+        Finds the innermost Env where the given name appears.
+        @param var: The name of the variable we're looking for.
+        @returns Env: The environment in which this name appears.
+        """
+        if var in self:
+            return self
+        return self.outer.find(var)
+
 def standard_env() -> Env:
     """Create the standard top-level environment (variable namespace) with some Scheme standard procedures."""
     env = Env()
@@ -87,20 +112,39 @@ def eval(x: Exp, env: Env) -> Exp:
     """
     Evaluate an expression in an environment.
     """
-    if isinstance(x, Symbol):      # variable reference
-        return env[x]
-    if isinstance(x, Number):      # constant number
-        return x                
-    if x[0] == 'if':               # conditional
-        (_, test, conseq, alt) = x
+    if isinstance(x, Symbol):        # variable reference
+        return env.find(x)[x]
+
+    if not isinstance(x, List):      # constant number
+        return x
+    
+    op, *args = x
+    if op == 'quote':              # Quote an expression without evaluating it
+        return args[0]
+    
+    if op == 'if':               # conditional
+        (test, conseq, alt) = args
         result = eval(test,env)
-        exp = (conseq if eval(test, env) else alt)
+        if result:
+            exp = conseq
+        else:
+            exp = alt
         return eval(exp, env)
-    if x[0] == 'define':           # definition
-        (_, symbol, exp) = x
+
+    if op == 'define':           # definition
+        (symbol, exp) = args
         env[symbol] = eval(exp, env)
         return None
+
+    if op == 'set!':             # assignment
+        (symbol, exp) = args
+        env.find(symbol)[symbol] = eval(exp, env)
+        return None
     
+    if op == 'lambda':           # procedure
+        (parms, body) = args
+        return Procedure(parms, body, env)
+        
     # Procedure call.
     proc = eval(x[0], env)
     args = [eval(arg, env) for arg in x[1:]]
@@ -115,6 +159,25 @@ def unparse(exp):
         return '(' + ' '.join(map(unparse, exp)) + ')' 
     else:
         return str(exp)
+
+
+class Procedure:
+    """A user-defined procedure with variable name bindings.
+    """
+    def __init__(self, parms, body, env):
+        """
+        @param pams: A sequence of names that will be used in the procedure.
+        @param body: Parsed code forming the body of this procedure.
+        @param env: The environment (closure) this procedure runs in.
+        """
+        self.parms = parms
+        self.body = body
+        self.env = env
+    
+    def __call__(self, *args):
+        # Create an environment with bindings for this one invocation.
+        env = Env(self.parms, args, self.env)
+        return eval(self.body, env)   
 
 class Console:
     """A terminal to read input and print things.
