@@ -1,4 +1,3 @@
-from pydoc import doc
 from typing import List as PythonList
 import math
 import operator as op
@@ -102,7 +101,7 @@ def standard_env() -> Env:
         'length':  len, 
         'list':    lambda *x: List(x), 
         'list?':   lambda x: isinstance(x, List), 
-        'map':     map,
+        'map':     lambda *x: list(map(*x)), # Plain python map does nothing unless iterated.
         'max':     max,
         'min':     min,
         'not':     op.not_,

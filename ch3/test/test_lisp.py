@@ -145,3 +145,16 @@ class TestLisp(unittest.TestCase):
         self._enter('(sumto 4)', 10)
         self._verify_console()
 
+    def test_map(self):
+        self._start_console()
+        self._enter('(map (lambda (x) (+ x 1)) (list 1 2 3))', [2,3,4])
+        self._verify_console()
+
+    def test_map_foreach(self):
+        """Tests using map as a foreach construct"""
+        self._start_console()
+        self._enter('(define total 0)')
+        self._enter('(define process (lambda (x) (set! total (+ total x))))')
+        self._enter('(map process (list 1 2 3))', [None, None, None])
+        self._enter('total', 6)
+        self._verify_console()

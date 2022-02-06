@@ -1,6 +1,8 @@
 # rico-lisp
 A simple lisp interpreter in Python.
 
+Originally based on Peter Norvig's outstanding [article about Lisp](https://norvig.com/lispy.html).  Then I put a unit test framework around it so
+that I coudl begin adding features and fixing problems.
 
 ## Demo
 ```
