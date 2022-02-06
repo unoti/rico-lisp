@@ -128,12 +128,6 @@ class TestLisp(unittest.TestCase):
     
     def test_while(self):
         self._start_console()
-        code = """
-            (define sumto (lambda (x)
-                (define total 0)
-            ))
-
-        """
         self._enter("""
             (define sumto (lambda (x)
                 (begin
