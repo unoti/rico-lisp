@@ -11,8 +11,8 @@ Atom   = (Symbol, Number) # An Atom is a Symbol or Number
 List   = list             # List is implemented as a Python list
 Exp    = (Atom, List)     # An expression is either an Atom or List
 
-#diagnostic_trace = False
-diagnostic_trace = True
+diagnostic_trace = False
+#diagnostic_trace = True
 
 def tokenize(chars: str):
     """Convert a string of characters into a list of tokens."""
