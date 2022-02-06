@@ -22,6 +22,17 @@ A simple lisp interpreter in Python.
 > exit
 ```
 
+## Run tests
+```
+cd ch3
+test-run
+```
+
+To run a single test, do something like:
+```
+python -m unittest -v test.test_lisp.TestLisp.test_variable
+```
+
 ## TODO
 Expand this so that I can write something like Asteroids.
 * [Tail Call Optimization](https://en.wikipedia.org/wiki/Tail_call)

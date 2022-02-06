@@ -10,6 +10,8 @@ Atom   = (Symbol, Number) # An Atom is a Symbol or Number
 List   = list             # List is implemented as a Python list
 Exp    = (Atom, List)     # An expression is either an Atom or List
 
+diagnostic_trace = False
+
 def tokenize(chars: str):
     """Convert a string of characters into a list of tokens."""
     return chars.replace('(', ' ( ').replace(')', ' ) ').split()
@@ -73,7 +75,10 @@ class Env(dict):
         """
         if var in self:
             return self
-        return self.outer.find(var)
+        if self.outer:
+            return self.outer.find(var)
+        raise Exception(f'Variable "{var}" not found')
+
 
 def standard_env() -> Env:
     """Create the standard top-level environment (variable namespace) with some Scheme standard procedures."""
@@ -112,6 +117,8 @@ def eval(x: Exp, env: Env) -> Exp:
     """
     Evaluate an expression in an environment.
     """
+    if diagnostic_trace:
+        print(f'--eval Exp: ', x)
     if isinstance(x, Symbol):        # variable reference
         return env.find(x)[x]
 
@@ -138,7 +145,8 @@ def eval(x: Exp, env: Env) -> Exp:
 
     if op == 'set!':             # assignment
         (symbol, exp) = args
-        env.find(symbol)[symbol] = eval(exp, env)
+        value = eval(exp, env)
+        env.find(symbol)[symbol] = value
         return None
     
     if op == 'lambda':           # procedure
@@ -148,6 +156,8 @@ def eval(x: Exp, env: Env) -> Exp:
     # Procedure call.
     proc = eval(x[0], env)
     args = [eval(arg, env) for arg in x[1:]]
+    if diagnostic_trace:
+        print(f'procedure {x[0]} call with {len(args)} args: ', args)
     return proc(*args)
 
 def unparse(exp):

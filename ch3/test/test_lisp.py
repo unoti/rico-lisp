@@ -100,18 +100,28 @@ class TestLisp(unittest.TestCase):
         self._enter('(account2 -10)', 130)
         self._verify_console()
 
-
     def test_variable(self):
         self._start_console()
-        self._enter('(set! x 5)')
+        self._enter('(define x 5)')
         self._enter('(* x 2)', 10)
+        self._enter('(set! x 6)')
+        self._enter('(* x 2)', 12)
         self._verify_console()
 
-    def xx_test_fib_recursive(self):
+    def test_recursion(self):
         self._start_console()
         self._enter("""
             (define fib (lambda (x)
-                
-            ))
+                (if (<= x 0)
+                    0
+                    (if (= x 1)
+                        1
+                        (+ (fib (- x 1)) (fib (- x 2)))))))
         """)
+        self._enter('(fib 1)', 1)
+        self._enter('(fib 2)', 1)
+        self._enter('(fib 3)', 2)
+        self._enter('(fib 4)', 3)
+        self._enter('(fib 5)', 5)
+        self._enter('(fib 6)', 8)
         self._verify_console()
