@@ -125,3 +125,29 @@ class TestLisp(unittest.TestCase):
         self._enter('(fib 5)', 5)
         self._enter('(fib 6)', 8)
         self._verify_console()
+    
+    def test_while(self):
+        self._start_console()
+        code = """
+            (define sumto (lambda (x)
+                (define total 0)
+            ))
+
+        """
+        self._enter("""
+            (define sumto (lambda (x)
+                (begin
+                    (define total 0)
+                    (while (> x 0)
+                        (begin
+                            (set! total (+ total x))
+                            (set! x (- x 1))
+                        )
+                    )
+                    total
+                )
+            ))
+        """)
+        self._enter('(sumto 4)', 10)
+        self._verify_console()
+

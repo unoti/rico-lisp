@@ -1,3 +1,4 @@
+from pydoc import doc
 from typing import List as PythonList
 import math
 import operator as op
@@ -10,7 +11,8 @@ Atom   = (Symbol, Number) # An Atom is a Symbol or Number
 List   = list             # List is implemented as a Python list
 Exp    = (Atom, List)     # An expression is either an Atom or List
 
-diagnostic_trace = False
+#diagnostic_trace = False
+diagnostic_trace = True
 
 def tokenize(chars: str):
     """Convert a string of characters into a list of tokens."""
@@ -152,6 +154,16 @@ def eval(x: Exp, env: Env) -> Exp:
     if op == 'lambda':           # procedure
         (parms, body) = args
         return Procedure(parms, body, env)
+    
+    if op == 'while':
+        (cond, statement) = args
+        result = None
+        while True:
+            conditional_result = eval(cond, env)
+            if not conditional_result:
+                break
+            result = eval(statement, env)
+        return result
         
     # Procedure call.
     proc = eval(x[0], env)
