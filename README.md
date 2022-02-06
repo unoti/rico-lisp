@@ -2,7 +2,8 @@
 A simple lisp interpreter in Python.
 
 Originally based on Peter Norvig's outstanding [article about Lisp](https://norvig.com/lispy.html).  Then I put a unit test framework around it so
-that I coudl begin adding features and fixing problems.
+that I could begin adding features and fixing problems.  The goal for this is to make a complete enough version of Lisp
+that I can implement a game of Asteroids in it.
 
 ## Demo
 ```
@@ -39,6 +40,7 @@ python -m unittest -v test.test_lisp.TestLisp.test_variable
 Expand this so that I can write something like Asteroids.
 * [Tail Call Optimization](https://en.wikipedia.org/wiki/Tail_call)
     * To write a simple game I need to iterate infinitely.  This means either TCO, or cheating by implementing an explicit loop structure.
+    * **DONE**.  I've implemented a `while` construct that can loop infinitely without producing stack frames.
 * [Data Structures](https://www.csie.ntu.edu.tw/~course/10420/Resources/lp/node50.html)
     * [Association Lists](https://www.csie.ntu.edu.tw/~course/10420/Resources/lp/node51.html)
 * Cleanup/exception handling.
