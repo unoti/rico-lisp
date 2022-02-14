@@ -6,7 +6,7 @@ def main1():
 
 def main2():   
     prg = [ 
-        ['print', 'my name is', 'richard'],
+        ['print', 'We love', 'cats and dogs'],
         ['print', ['+', 1, 2]]
     ]
     run(prg)
@@ -37,5 +37,5 @@ def eval(x):
     raise Exception(f'Unknown operator {operator}')
 
 if __name__ == '__main__':
-    main1()
-    #main2()
+    #main1()
+    main2()
