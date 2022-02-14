@@ -26,6 +26,9 @@ def eval(x):
     rest = x[1:]
 
     if operator == 'print':
+        # Initial version:
+        # for item in rest:
+        #   print(item)
         items = [str(eval(item)) for item in rest]
         output = ' '.join(items)
         print(output)
