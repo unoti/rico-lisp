@@ -9,7 +9,7 @@ prg = [
 
 The output of this program should be
 ```
-my name is richard
+We love cats and dogs
 3
 ```
 

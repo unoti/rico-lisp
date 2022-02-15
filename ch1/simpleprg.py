@@ -11,7 +11,6 @@ def main2():
     ]
     run(prg)
 
-
 def run(expressions: List):
     """Run a sequence of commands, or evaluate a sequence of expressions."""
     result = None
